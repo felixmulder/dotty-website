@@ -48,7 +48,6 @@ lazy val testy = project.in(file("."))
       val circeVersion  = "0.4.1"
 
       val scalaDeps = Seq(
-        "com.typesafe"          % "config"              % "1.3.0",
         "com.github.pathikrit" %% "better-files"        % "2.16.0",
         "io.circe"             %% "circe-core"          % circeVersion,
         "io.circe"             %% "circe-generic"       % circeVersion,
