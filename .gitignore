@@ -1,0 +1,7 @@
+*.swp
+
+target/
+project/target/
+cloned/
+
+builds.json

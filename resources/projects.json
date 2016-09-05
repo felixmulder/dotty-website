@@ -1,0 +1,27 @@
+[
+    {
+        "name": "scopt",
+        "repo": "git@github.com:olafurpg/scopt",
+        "branch": "compile-with-dotty",
+        "testCmd": "sbt -no-colors compile"
+    },
+    {
+        "name": "better-files",
+        "repo": "git@github.com:olafurpg/better-files",
+        "branch": "compile-with-dotty",
+        "testDir": "core",
+        "testCmd": "sbt -no-colors ;compile;test:run"
+    },
+    {
+        "name": "squants",
+        "repo": "git@github.com:olafurpg/squants",
+        "branch": "compile-with-dotty",
+        "testCmd": "sbt -no-colors squantsJVM/test"
+    },
+    {
+        "name": "monix",
+        "repo": "git@github.com:olafurpg/monix",
+        "branch": "master",
+        "testCmd": "sbt compile"
+    }
+]
