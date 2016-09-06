@@ -326,6 +326,24 @@ a#home-button > img {
     width: 100%;
 }
 
+/** Blog */
+div.author-container {
+    margin: 1em 0;
+}
+
+div.author-container > img {
+    width: 100px;
+    border-radius: 50%;
+    border: 2px solid #aaa;
+    margin-right: 1em;
+}
+
+div.author-container > span.author {
+    font-size: 1.1em;
+}
+
+/** End Blog */
+
 /* Media query rules specifically for mobile devices */
 @media
 screen /* HiDPI device like Nexus 5 */

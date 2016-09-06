@@ -31,6 +31,16 @@ object store {
     }
   }
 
+  case class BlogPost(title: String,
+                      subTitle: Option[String],
+                      author: String,
+                      authorImg: Option[String],
+                      text: String) {
+    lazy val html =
+      new PegDownProcessor(Extensions.ALL)
+      .markdownToHtml(text)
+  }
+
   case class ProjectAndStatus(project: Project, status: Status)
 
   implicit object BuildOrdering extends Ordering[Build] {
@@ -105,6 +115,53 @@ object store {
         thisMonthInDottyHtml = CacheItem(html, 1.hour.fromNow)
         html
       }
+    }
+  }
+
+  var posts: Cached[List[BlogPost]] = EmptyCache
+  def GetPosts(): Task[List[BlogPost]] = store.synchronized {
+    posts getOrElse Task.delay {
+      import better.files._
+      import org.yaml.snakeyaml.Yaml
+
+      val File.Type.Directory(mdposts) = file"blog/"
+      println("still getting 1")
+      val parser = new PegDownProcessor(Extensions.ALL)
+
+      def parseYaml(str: String): Map[String, String] = try {
+        import scala.collection.JavaConverters._
+        new Yaml()
+          .loadAll(str)
+          .iterator.next
+          .asInstanceOf[java.util.Map[String,String]].asScala
+          .toMap
+      } catch {
+        case ex: Throwable =>
+          System.err.println(ex)
+          System.err.println(ex.getMessage)
+          ex.printStackTrace()
+          Map.empty
+      }
+
+      val newPosts = for {
+        post <- mdposts.toList
+        text = post.lines.mkString("\n")
+        postInfo = parseYaml(text)
+      } yield BlogPost(
+        postInfo("title"),
+        postInfo.get("subTitle"),
+        postInfo("author"),
+        postInfo.get("authorImg").map("/static" + _),
+        text.lines
+          .dropWhile(_.trim != "---")
+          .drop(1)
+          .dropWhile(_.trim != "---")
+          .drop(1)
+          .mkString("\n")
+      )
+
+      posts = CacheItem(newPosts, 1.hour.fromNow)
+      newPosts
     }
   }
 }

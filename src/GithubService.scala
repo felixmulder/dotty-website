@@ -55,6 +55,12 @@ trait GithubService extends CirceCoder {
         .fromResource(path.toString, Some(req))
         .fold(NotFound())(Task.now)
 
+    case GET -> Root / "blog" =>
+      for {
+        posts <- GetPosts()
+        res <- Ok(RenderHTML(twirl.html.BlogPost(posts.head).toString :: Nil)).withContentType(Some(`Content-Type`(`text/html`)))
+      } yield res
+
     case GET -> Root / "thismonth" =>
       for {
         frag <- GetThisMonthInDotty()
