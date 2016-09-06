@@ -55,13 +55,18 @@ trait GithubService extends CirceCoder {
         .fromResource(path.toString, Some(req))
         .fold(NotFound())(Task.now)
 
-    case GET -> Root =>
-      import better.files._
-      val tpl = for {
-        builds <- GetBuildInfo
-        templ  <- RenderBuildStatus(builds)
-      } yield templ
+    case GET -> Root / "thismonth" =>
+      for {
+        frag <- GetThisMonthInDotty()
+        html <- RenderThisMonthInDotty(frag)
+        res  <- Ok(html).withContentType(Some(`Content-Type`(`text/html`)))
+      } yield res
 
-      Ok(tpl).withContentType(Some(`Content-Type`(`text/html`)))
+    case GET -> Root =>
+      for {
+        builds <- GetBuildInfo
+        tpl    <- RenderIndex(builds)
+        res    <- Ok(tpl).withContentType(Some(`Content-Type`(`text/html`)))
+      } yield res
   }
 }

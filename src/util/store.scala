@@ -1,14 +1,26 @@
 package testy.util
 
-import scala.collection.immutable.SortedSet
+import org.http4s.client.blaze._
+import org.pegdown.{PegDownProcessor, Extensions}
 import scalaz.concurrent.Task
 import repo.{Project, Status}
+import scala.collection.immutable.SortedSet
+import scala.concurrent.duration._
 import io.circe._
 import io.circe.syntax._
 import io.circe.parser._
 import io.circe.generic.auto._
 
 object store {
+
+  sealed trait Cached[+I] { self =>
+    def getOrElse[R >: I](default: => Task[R]): Task[R] = self match {
+      case CacheItem(i, deadline) if deadline.hasTimeLeft => Task.now(i)
+      case EmptyCache => default
+    }
+  }
+  case object EmptyCache extends Cached[Nothing]
+  case class CacheItem[I](item: I, validUntil: Deadline) extends Cached[I]
 
   case class Build(commitHash: String, projects: Map[String, ProjectAndStatus]) {
     override def equals(other: Any) = other match {
@@ -27,28 +39,37 @@ object store {
   case object Get extends AccessInstruction
   case class GetAndSet(getAndSet: Set[Build] => Set[Build]) extends AccessInstruction
 
-  private[this] def accessStats(instr: AccessInstruction): Set[Build] = store.synchronized {
-    import better.files._
+  private[this] var builds: Set[Build] = _
 
-    def jsonFile = file"builds.json"
+  private[this] def accessStats(instr: AccessInstruction): Set[Build] =
+    store.synchronized {
+      import better.files._
 
-    def get: Set[Build] = {
-      val json = jsonFile.createIfNotExists().lines.mkString("")
-      decode[List[Build]](json).getOrElse(Nil).toSet
+      def jsonFile = file"builds.json"
+
+      def get: Set[Build] = {
+        if (builds == null) {
+          val json = jsonFile.createIfNotExists().lines.mkString("")
+          builds = decode[List[Build]](json).getOrElse(Nil).toSet
+        }
+
+        builds
+      }
+
+      def set(s: Set[Build]) = {
+        jsonFile
+          .createIfNotExists()
+          .overwrite(s.toList.asJson.noSpaces)
+
+        builds = s
+        s
+      }
+
+      instr match {
+        case Get => get
+        case GetAndSet(getAndSet) => set(getAndSet(get))
+      }
     }
-
-    def set(s: Set[Build]) = {
-      jsonFile
-        .createIfNotExists()
-        .overwrite(s.toList.asJson.noSpaces)
-      s
-    }
-
-    instr match {
-      case Get => get
-      case GetAndSet(getAndSet) => set(getAndSet(get))
-    }
-  }
 
   def SetStatus(hash: String, proj: Project, newStat: Status): Task[Unit] =
     Task.delay {
@@ -65,11 +86,23 @@ object store {
       })
     }
 
-  def GetStatus(proj: Project): Task[Option[Status]] = Task.delay {
-    accessStats(Get).find(_.projects.contains(proj.name)).map(_.projects(proj.name).status)
-  }
+  def GetBuildInfo: Task[List[Build]] =
+    Task.delay(accessStats(Get).toList)
 
-  def GetBuildInfo: Task[List[Build]] = Task.delay {
-    accessStats(Get).toList
+  private[this] val client = PooledHttp1Client()
+  private[this] var thisMonthInDottyHtml: Cached[String] = EmptyCache
+
+  def GetThisMonthInDotty(): Task[String] = store.synchronized {
+    thisMonthInDottyHtml.getOrElse {
+      val parser = new PegDownProcessor(Extensions.ALL)
+      val endpoint =
+        "https://raw.githubusercontent.com/wiki/lampepfl/dotty/This-Month-in-Dotty.md"
+
+      client.expect[String](endpoint).map { content =>
+        val html = parser.markdownToHtml(content)
+        thisMonthInDottyHtml = CacheItem(html, 1.hour.fromNow)
+        html
+      }
+    }
   }
 }
