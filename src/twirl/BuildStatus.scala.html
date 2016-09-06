@@ -2,93 +2,69 @@
 @import testy.util.repo._
 @(builds: List[Build])
 
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <title>Dotty Build Status</title>
-        <!-- Bootstrap tags -->
-        <meta charset="utf-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-        <meta http-equiv="x-ua-compatible" content="ie=edge"/>
-        <!-- CSS -->
-        <link
-            rel="stylesheet"
-            href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.3/css/bootstrap.min.css"
-        />
-        <link
-            rel="stylesheet"
-            href="/static/index.css"
-        />
-    </head>
-    <body>
-        <div class="page blue">
-            <div class="centered">
-                <h1 class="title">Community Projects</h1>
-                <p>
-                    Dotty can build a number of community projects, here you
-                    can view the projects status on the latest commit to
-                    master:
-                </p>
-                @if(builds.isEmpty) {
-                    <div class="card">
-                        <div class="card-block">
-                            <h4 class="card-title" style="color: #000;">No builds availale</h2>
-                            <p class="card-text" style="color: #000;">
-                                This might be because the CI infrastructure is down.
-                            </p>
-                        </div>
-                    </div>
-                }
-                @for(build <- builds) {
-                    @for((name, ProjectAndStatus(project, status)) <- build.projects.toList.sortBy(_._2.project.name)) {
-                        <div class="project">
-                            <h2 class="project-title">@project.name</h2>
-                            <button
-                                class="btn btn-link console-output-button"
-                                type="button"
-                                data-toggle="collapse"
-                                data-target="@{ "#" + project.name }"
-                                aria-expanded="false"
-                                aria-controls="@{project.name}"
-                            >
-                                Console Output
-                            </button>
-                            <div class="collapse console-output" id="@{project.name}">
-                                @for(output <- status.output) {
-                                    @output.line
-                                    <br>
-                                }
-                            </div>
-
-                            @status match {
-                                case Building => {
-                                    <progress class="progress progress-animate" value="100" max="100"></progress>
-                                    <div class="text-xs-center" id="example-caption-2">Building from @project.repo</div>
-                                }
-                                case TimedOut => {
-                                    <progress class="progress progress-danger" value="100" max="100"></progress>
-                                    <div class="text-xs-center" id="example-caption-2">Building from @project.repo timed out</div>
-                                }
-                                case Built(output, warnings, errors) if errors > 0 => {
-                                    <progress class="progress progress-danger" value="100" max="100"></progress>
-                                    <div class="text-xs-center" id="example-caption-2">Error building or testing project</div>
-                                }
-                                case Built(output, warnings, errors) => {
-                                    <progress class="progress progress-success" value="100" max="100"></progress>
-                                    <div class="text-xs-center" id="example-caption-2">Built project with @warnings warning(s)</div>
-                                }
-                            }
-                        </div>
-                    }
-                    <hr>
-                }
-                <p style="text-align: center;">
-                    Want to add your project to the list? Send us a <a href="#">PR!</a>
-                </p>
+<div id="build-status" class="page blue">
+    <div class="centered">
+        <h1 class="title">Community Projects</h1>
+        <p>
+            Dotty can build a number of community projects, here you
+            can view the projects status on the latest commit to
+            master:
+        </p>
+        @if(builds.isEmpty) {
+            <div class="card">
+                <div class="card-block">
+                    <h4 class="card-title" style="color: #000;">No builds availale</h2>
+                    <p class="card-text" style="color: #000;">
+                        This might be because the CI infrastructure is down.
+                    </p>
+                </div>
             </div>
-        </div>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.2.0/js/tether.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.3/js/bootstrap.min.js"></script>
-    </body>
-</html>
+        }
+        @for(build <- builds) {
+            @for((name, ProjectAndStatus(project, status)) <- build.projects.toList.sortBy(_._2.project.name)) {
+                <div class="project">
+                    <h2 class="project-title">@project.name</h2>
+                    <button
+                        class="btn btn-link console-output-button"
+                        type="button"
+                        data-toggle="collapse"
+                        data-target="@{ "#" + project.name }"
+                        aria-expanded="false"
+                        aria-controls="@{project.name}"
+                    >
+                        Console Output
+                    </button>
+                    <div class="collapse console-output" id="@{project.name}">
+                        @for(output <- status.output) {
+                            @output.line
+                            <br>
+                        }
+                    </div>
+
+                    @status match {
+                        case Building => {
+                            <progress class="progress progress-animate" value="100" max="100"></progress>
+                            <div class="text-xs-center" id="example-caption-2">Building from @project.repo</div>
+                        }
+                        case TimedOut => {
+                            <progress class="progress progress-danger" value="100" max="100"></progress>
+                            <div class="text-xs-center" id="example-caption-2">Building from @project.repo timed out</div>
+                        }
+                        case Built(output, warnings, errors) if errors > 0 => {
+                            <progress class="progress progress-danger" value="100" max="100"></progress>
+                            <div class="text-xs-center" id="example-caption-2">Error building or testing project</div>
+                        }
+                        case Built(output, warnings, errors) => {
+                            <progress class="progress progress-success" value="100" max="100"></progress>
+                            <div class="text-xs-center" id="example-caption-2">Built project with @warnings warning(s)</div>
+                        }
+                    }
+                </div>
+            }
+            <hr>
+        }
+        <p style="text-align: center;">
+            Want to add your project to the list? Send us a <a href="#">PR!</a>
+        </p>
+    </div>
+</div>
