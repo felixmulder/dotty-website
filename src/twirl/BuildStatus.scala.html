@@ -20,7 +20,7 @@
                 </div>
             </div>
         }
-        @for(build <- builds) {
+        @for(build <- builds.headOption) {
             @for((name, ProjectAndStatus(project, status)) <- build.projects.toList.sortBy(_._2.project.name)) {
                 <div class="project">
                     <h2 class="project-title">@project.name</h2>

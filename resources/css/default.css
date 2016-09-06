@@ -246,6 +246,86 @@ div.centered-table+p {
     color: #fff;
 }
 
+div#build-status > div.centered > div.project {
+    margin-bottom: 2em;
+    position: relative;
+}
+
+div#build-status progress.progress {
+    position: relative;
+    height: 38px !important;
+}
+
+div#build-status progress.progress-animate:after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+    background-image: linear-gradient(
+        60deg,
+        rgba(255, 255, 255, .2) 25%,
+        transparent 25%,
+        transparent 50%,
+        rgba(255, 255, 255, .2) 50%,
+        rgba(255, 255, 255, .2) 75%,
+        transparent 75%,
+        transparent
+    );
+    z-index: 1;
+    background-size: 30px 52px;
+    animation: move 2s linear infinite;
+    border-top-right-radius: 0.2em;
+    border-bottom-right-radius: 0.2em;
+    border-top-left-radius: 0.2em;
+    border-bottom-left-radius: 0.2em;
+    overflow: hidden;
+    animation: move 0.5s linear infinite;
+}
+
+@keyframes move {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 88px 50px;
+    }
+}
+
+div#build-status h1.title {
+    margin-top: 1em;
+}
+
+div#build-status div.console-output {
+    font-family: "Source Sans pro";
+    font-weight: 600;
+    font-size: 15px;
+}
+
+div#build-status button.console-output-button,
+div#build-status button.console-output-button:hover,
+div#build-status button.console-output-button:active,
+div#build-status button.console-output-button:focus,
+div#build-status button.console-output-button:visited {
+    color: #f26527;
+    font-size: 13px !important;
+    position: absolute;
+    top: 7px;
+    right: 1px;
+}
+
+a#home-button {
+    position: fixed;
+    top: 2em;
+    left: 2em;
+    z-index: 2;
+    text-align: center;
+    color: #fff;
+    width: 41px;
+}
+
+a#home-button > img {
+    width: 100%;
+}
+
 /* Media query rules specifically for mobile devices */
 @media
 screen /* HiDPI device like Nexus 5 */
@@ -323,70 +403,4 @@ and (-webkit-device-pixel-ratio: 2)
     div#header > nav.nav.nav-pills .nav-item+.nav-item {
         margin-left: 0;
     }
-}
-
-div#build-status > div.centered > div.project {
-    margin-bottom: 2em;
-    position: relative;
-}
-
-div#build-status progress.progress {
-    position: relative;
-    height: 38px !important;
-}
-
-div#build-status progress.progress-animate:after {
-    content: "";
-    position: absolute;
-    top: 0; left: 0; bottom: 0; right: 0;
-    background-image: linear-gradient(
-        60deg,
-        rgba(255, 255, 255, .2) 25%,
-        transparent 25%,
-        transparent 50%,
-        rgba(255, 255, 255, .2) 50%,
-        rgba(255, 255, 255, .2) 75%,
-        transparent 75%,
-        transparent
-    );
-    z-index: 1;
-    background-size: 30px 52px;
-    animation: move 2s linear infinite;
-    border-top-right-radius: 0.2em;
-    border-bottom-right-radius: 0.2em;
-    border-top-left-radius: 0.2em;
-    border-bottom-left-radius: 0.2em;
-    overflow: hidden;
-    animation: move 0.5s linear infinite;
-}
-
-@keyframes move {
-    0% {
-        background-position: 0 0;
-    }
-    100% {
-        background-position: 88px 50px;
-    }
-}
-
-div#build-status h1.title {
-    margin-top: 1em;
-}
-
-div#build-status div.console-output {
-    font-family: "Source Sans pro";
-    font-weight: 600;
-    font-size: 15px;
-}
-
-div#build-status button.console-output-button,
-div#build-status button.console-output-button:hover,
-div#build-status button.console-output-button:active,
-div#build-status button.console-output-button:focus,
-div#build-status button.console-output-button:visited {
-    color: #f26527;
-    font-size: 13px !important;
-    position: absolute;
-    top: 7px;
-    right: 1px;
 }

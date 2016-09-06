@@ -22,9 +22,11 @@ object store {
   case object EmptyCache extends Cached[Nothing]
   case class CacheItem[I](item: I, validUntil: Deadline) extends Cached[I]
 
-  case class Build(commitHash: String, projects: Map[String, ProjectAndStatus]) {
+  case class Build(commitHash: String,
+                   projects: Map[String, ProjectAndStatus],
+                   time: Long = System.currentTimeMillis) {
     override def equals(other: Any) = other match {
-      case Build(hash,_) => hash == commitHash
+      case Build(hash, _, _) => hash == commitHash
       case _ => false
     }
   }
@@ -32,7 +34,7 @@ object store {
   case class ProjectAndStatus(project: Project, status: Status)
 
   implicit object BuildOrdering extends Ordering[Build] {
-    def compare(a: Build, b: Build) = a.commitHash compare b.commitHash
+    def compare(a: Build, b: Build) = b.time compare a.time
   }
 
   sealed trait AccessInstruction
