@@ -5,16 +5,18 @@
     Home
 </a>
 
-<div class="page teal">
+<div class="page teal blog-post">
     <div class="centered">
-        <h1>@post.title</h1>
-
+        <h1 class"blog-title">@post.title</h1>
 
         <div class="author-container">
             @if(post.authorImg.isDefined) {
             <img src="@post.authorImg.get">
             }
-            <span class="author">@post.author</span>
+            <div class="float-container">
+                <div class="author">@post.author</div>
+                <div class="date">@post.date</div>
+            </div>
         </div>
 
         @Html(post.html)

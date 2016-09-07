@@ -1,7 +1,7 @@
 package testy.util
 
 import org.http4s.client.blaze._
-import org.pegdown.{PegDownProcessor, Extensions}
+//import org.pegdown.{PegDownProcessor, Extensions}
 import scalaz.concurrent.Task
 import repo.{Project, Status}
 import scala.collection.immutable.SortedSet
@@ -10,6 +10,7 @@ import io.circe._
 import io.circe.syntax._
 import io.circe.parser._
 import io.circe.generic.auto._
+import com.github.rjeschke.txtmark.{Processor, Configuration}
 
 object store {
 
@@ -31,14 +32,20 @@ object store {
     }
   }
 
+  private[this] val markdownConfig =
+    Configuration.builder.forceExtentedProfile.build
+
+  private[this] def parseMarkdown(md: String): String =
+    Processor.process(md, markdownConfig)
+
   case class BlogPost(title: String,
                       subTitle: Option[String],
                       author: String,
                       authorImg: Option[String],
-                      text: String) {
-    lazy val html =
-      new PegDownProcessor(Extensions.ALL)
-      .markdownToHtml(text)
+                      date: String,
+                      text: String,
+                      fileName: String) {
+    lazy val html = parseMarkdown(text)
   }
 
   case class ProjectAndStatus(project: Project, status: Status)
@@ -106,12 +113,11 @@ object store {
 
   def GetThisMonthInDotty(): Task[String] = store.synchronized {
     thisMonthInDottyHtml.getOrElse {
-      val parser = new PegDownProcessor(Extensions.ALL)
       val endpoint =
         "https://raw.githubusercontent.com/wiki/lampepfl/dotty/This-Month-in-Dotty.md"
 
       client.expect[String](endpoint).map { content =>
-        val html = parser.markdownToHtml(content)
+        val html = parseMarkdown(content)
         thisMonthInDottyHtml = CacheItem(html, 1.hour.fromNow)
         html
       }
@@ -125,8 +131,6 @@ object store {
       import org.yaml.snakeyaml.Yaml
 
       val File.Type.Directory(mdposts) = file"blog/"
-      println("still getting 1")
-      val parser = new PegDownProcessor(Extensions.ALL)
 
       def parseYaml(str: String): Map[String, String] = try {
         import scala.collection.JavaConverters._
@@ -145,6 +149,8 @@ object store {
 
       val newPosts = for {
         post <- mdposts.toList
+        if post.name.endsWith(".md")
+        date = post.name.substring(0, 10)
         text = post.lines.mkString("\n")
         postInfo = parseYaml(text)
       } yield BlogPost(
@@ -152,15 +158,17 @@ object store {
         postInfo.get("subTitle"),
         postInfo("author"),
         postInfo.get("authorImg").map("/static" + _),
+        date,
         text.lines
           .dropWhile(_.trim != "---")
           .drop(1)
           .dropWhile(_.trim != "---")
           .drop(1)
-          .mkString("\n")
+          .mkString("\n"),
+        post.name
       )
 
-      posts = CacheItem(newPosts, 1.hour.fromNow)
+      posts = CacheItem(newPosts.sortBy(_.date).reverse, 1.hour.fromNow)
       newPosts
     }
   }

@@ -1,6 +1,6 @@
 package testy.util
 
-import store.Build
+import store.{Build, BlogPost}
 import twirl.html._
 import scalaz.concurrent.Task
 
@@ -17,4 +17,10 @@ object template {
 
   def RenderThisMonthInDotty(text: String): Task[String] =
     RenderHTML(ThisMonthInDotty(text).toString :: Nil)
+
+  def RenderBlog(posts: List[BlogPost]): Task[String] =
+    RenderHTML(BlogIndex(posts).toString :: Nil)
+
+  def RenderBlogPost(post: BlogPost): Task[String] =
+    RenderHTML(twirl.html.BlogPost(post).toString :: Nil)
 }

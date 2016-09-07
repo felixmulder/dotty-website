@@ -59,10 +59,10 @@ lazy val testy = project.in(file("."))
       )
 
       val javaDeps = Seq(
-        "org.pegdown"      % "pegdown"          % "1.6.0",
-        "org.eclipse.jgit" % "org.eclipse.jgit" % "4.4.1.201607150455-r",
-        "org.slf4j"        % "slf4j-nop"        % "1.6.4",
-        "org.yaml"         % "snakeyaml"        % "1.17"
+        "com.github.rjeschke" % "txtmark"          % "0.13",
+        "org.eclipse.jgit"    % "org.eclipse.jgit" % "4.4.1.201607150455-r",
+        "org.slf4j"           % "slf4j-nop"        % "1.6.4",
+        "org.yaml"            % "snakeyaml"        % "1.17"
       )
 
       scalaDeps ++ javaDeps

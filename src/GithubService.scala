@@ -58,7 +58,16 @@ trait GithubService extends CirceCoder {
     case GET -> Root / "blog" =>
       for {
         posts <- GetPosts()
-        res <- Ok(RenderHTML(twirl.html.BlogPost(posts.head).toString :: Nil)).withContentType(Some(`Content-Type`(`text/html`)))
+        html  <- RenderBlog(posts)
+        res   <- Ok(html).withContentType(Some(`Content-Type`(`text/html`)))
+      } yield res
+
+    case GET -> Root / "blog" / year / month / day / title =>
+      for {
+        posts <- GetPosts()
+        Some(post) = posts.find(_.fileName == s"$year-$month-$day-$title.md")
+        html  <- RenderBlogPost(post)
+        res   <- Ok(html).withContentType(Some(`Content-Type`(`text/html`)))
       } yield res
 
     case GET -> Root / "thismonth" =>

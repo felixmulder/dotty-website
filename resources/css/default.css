@@ -327,19 +327,56 @@ a#home-button > img {
 }
 
 /** Blog */
+#content > div.page.teal > div > h1 {
+    margin-top: 1em;
+}
+
+div.blog-post code {
+    padding: 0;
+    font-weight: 400;
+    font-size: 100%;
+    border-radius: 2px;
+    background-color: rgba(255, 255, 255, 0.85);
+    padding: 0 0.25rem;
+}
+
 div.author-container {
     margin: 1em 0;
+    width: 100%;
+    overflow: hidden;
 }
 
 div.author-container > img {
+    float: left;
     width: 100px;
     border-radius: 50%;
     border: 2px solid #aaa;
     margin-right: 1em;
 }
 
-div.author-container > span.author {
+div.author-container > div.float-container {
+    float: left;
+    margin-top: 1.3em;
+}
+
+div.author-container > div.float-container > div.author,
+div.author-container > div.float-container > div.date {
     font-size: 1.1em;
+}
+
+div#old-posts {
+    position: fixed;
+    z-index: 2;
+    top: 5em;
+    right: 2em;
+    color: #fff;
+}
+
+div#old-posts a,
+div#old-posts a:hover,
+div#old-posts a:focus,
+div#old-posts a:visited {
+    color: #f26527;
 }
 
 /** End Blog */
