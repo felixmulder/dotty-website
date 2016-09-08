@@ -1,20 +1,16 @@
 package dotty.website
 
-import org.http4s._
-import org.http4s.util._
-import org.http4s.dsl._
-import org.http4s.server.blaze._
+import org.http4s.server.blaze.BlazeBuilder
+import org.http4s.server.ServerApp
 import org.http4s.server.syntax._
-import org.http4s.server.{Server, ServerApp}
-import scalaz.concurrent.Task
 
 object Conductor extends ServerApp
                     with SiteService
                     with GithubService
 {
-  val services = siteService orElse githubApiService
+  val services = siteService || githubApiService
 
-  override def server(args: List[String]): Task[Server] =
+  override def server(args: List[String]) =
     BlazeBuilder
       .bindHttp(8080, "localhost")
       .mountService(services, "/")
