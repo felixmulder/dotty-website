@@ -1,4 +1,4 @@
-package testy
+package dotty.website
 
 object github {
   import io.circe._

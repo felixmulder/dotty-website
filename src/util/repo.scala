@@ -1,4 +1,4 @@
-package testy.util
+package dotty.website.util
 
 import java.util.concurrent.{TimeoutException, ScheduledExecutorService}
 import scala.concurrent.duration._

@@ -1,4 +1,4 @@
-package testy.util
+package dotty.website.util
 
 import io.circe._
 import io.circe.parser._

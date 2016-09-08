@@ -1,4 +1,4 @@
-package testy
+package dotty.website
 
 import org.http4s._
 import org.http4s.util._

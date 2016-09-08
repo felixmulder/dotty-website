@@ -1,4 +1,4 @@
-package testy
+package dotty.website
 
 import org.http4s._
 import org.http4s.dsl._
@@ -8,8 +8,8 @@ import org.http4s.MediaType._
 import scalaz.concurrent.Task
 
 trait SiteService {
-  import testy.util.store._
-  import testy.util.template._
+  import dotty.website.util.store._
+  import dotty.website.util.template._
 
   val siteService = HttpService {
     case req @ GET -> "static" /: path =>

@@ -1,4 +1,4 @@
-package testy
+package dotty.website
 
 import org.http4s._
 import org.http4s.dsl._
@@ -7,12 +7,12 @@ import scalaz._
 import scalaz.concurrent.Task
 
 trait GithubService extends CirceCoder {
-  import testy.util.repo._
-  import testy.util.store._
-  import testy.util.Config
+  import dotty.website.util.repo._
+  import dotty.website.util.store._
+  import dotty.website.util.Config
 
-  import testy.github._
-  import testy.github.decoders._
+  import dotty.website.github._
+  import dotty.website.github.decoders._
 
   def verifySecret(push: Push, request: Request)(onValid: Push => Task[Response]): Task[Response] = {
     import com.roundeights.hasher.{Hasher, Algo}

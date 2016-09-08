@@ -1,4 +1,4 @@
-package testy.util
+package dotty.website.util
 
 import store.{Build, BlogPost}
 import twirl.html._
