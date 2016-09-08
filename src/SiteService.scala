@@ -11,7 +11,7 @@ trait SiteService {
   import dotty.website.util.store._
   import dotty.website.util.template._
 
-  val siteService = HttpService {
+  val siteService = Logging log HttpService {
     case req @ GET -> "static" /: path =>
       StaticFile
         .fromResource(path.toString, Some(req))

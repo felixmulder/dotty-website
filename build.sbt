@@ -57,7 +57,8 @@ lazy val `dotty-website` = project.in(file("."))
         "org.http4s"           %% "http4s-circe"        % http4sVersion,
         "org.http4s"           %% "http4s-blaze-server" % http4sVersion,
         "org.http4s"           %% "http4s-blaze-client" % http4sVersion,
-        "com.roundeights"      %% "hasher"              % "1.2.0"
+        "com.roundeights"      %% "hasher"              % "1.2.0",
+        "org.log4s"            %% "log4s"               % "1.3.0"
       )
 
       val javaDeps = Seq(

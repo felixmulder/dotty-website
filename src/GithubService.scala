@@ -36,7 +36,7 @@ trait GithubService extends CirceCoder {
     }
   }
 
-  val githubApiService = HttpService {
+  val githubApiService = Logging log HttpService {
     case req @ POST -> Root / "github" =>
       req.decode[GithubEvent] {
         case p: Push =>
@@ -57,8 +57,11 @@ trait GithubService extends CirceCoder {
                 case _: Built =>
                   s"Successfully built ${project.name} against SNAPSHOT dotty"
               } runAsync {
-                case \/-(status) => println(status)
-                case -\/(e) => println(s"Error: $e")
+                case \/-(status) =>
+                  println(status)
+                case -\/(e) =>
+                  println(s"Error: $e")
+                  e.printStackTrace()
               }
             }
 
