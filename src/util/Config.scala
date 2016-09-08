@@ -22,4 +22,7 @@ case object Config {
     }
 
   val secret = sys.env("SECRET")
+
+  val port = sys.env("PORT").toInt
+  val host = sys.env("HOST")
 }

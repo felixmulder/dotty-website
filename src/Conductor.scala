@@ -3,6 +3,7 @@ package dotty.website
 import org.http4s.server.blaze.BlazeBuilder
 import org.http4s.server.ServerApp
 import org.http4s.server.syntax._
+import util.Config
 
 object Conductor extends ServerApp
                     with SiteService
@@ -12,7 +13,7 @@ object Conductor extends ServerApp
 
   override def server(args: List[String]) =
     BlazeBuilder
-      .bindHttp(8080, "localhost")
+      .bindHttp(Config.port, Config.host)
       .mountService(services, "/")
       .start
 }
