@@ -28,7 +28,7 @@ lazy val commonSettings = Seq(
 
 lazy val allSettings = buildSettings ++ commonSettings
 
-lazy val testy = project.in(file("."))
+lazy val `dotty-website` = project.in(file("."))
   .settings(allSettings)
   .settings(
     resourceDirectory in Compile := baseDirectory.value / "resources",
