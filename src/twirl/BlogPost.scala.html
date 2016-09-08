@@ -8,6 +8,9 @@
 <div class="page teal blog-post">
     <div class="centered">
         <h1 class"blog-title">@post.title</h1>
+        @if(post.subTitle.isDefined) {
+        <h2 class="blog-sub-title">@post.subTitle.get</h2>
+        }
 
         <div class="author-container">
             @if(post.authorImg.isDefined) {

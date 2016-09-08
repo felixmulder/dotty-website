@@ -39,6 +39,7 @@ lazy val testy = project.in(file("."))
 
 
     resolvers ++= Seq(
+      "RoundEights" at "http://maven.spikemark.net/roundeights",
       "jgit-repo" at "http://download.eclipse.org/jgit/maven"
     ),
 
@@ -55,7 +56,8 @@ lazy val testy = project.in(file("."))
         "org.http4s"           %% "http4s-dsl"          % http4sVersion,
         "org.http4s"           %% "http4s-circe"        % http4sVersion,
         "org.http4s"           %% "http4s-blaze-server" % http4sVersion,
-        "org.http4s"           %% "http4s-blaze-client" % http4sVersion
+        "org.http4s"           %% "http4s-blaze-client" % http4sVersion,
+        "com.roundeights"      %% "hasher"              % "1.2.0"
       )
 
       val javaDeps = Seq(

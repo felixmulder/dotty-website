@@ -327,8 +327,13 @@ a#home-button > img {
 }
 
 /** Blog */
-#content > div.page.teal > div > h1 {
+#content > div.page.teal > div > h1.blog-title {
     margin-top: 1em;
+}
+
+#content > div.page.teal > div > h2.blog-sub-title {
+    font-size: 1.5rem;
+    margin: 0;
 }
 
 div.blog-post code {
@@ -367,9 +372,11 @@ div.author-container > div.float-container > div.date {
 div#old-posts {
     position: fixed;
     z-index: 2;
-    top: 5em;
-    right: 2em;
+    top: 2em;
+    right: 0.5em;
     color: #fff;
+    width: 265px;
+    overflow: ellipsis;
 }
 
 div#old-posts a,
@@ -457,5 +464,11 @@ and (-webkit-device-pixel-ratio: 2)
 
     div#header > nav.nav.nav-pills .nav-item+.nav-item {
         margin-left: 0;
+    }
+}
+
+@media screen and (max-width: 1194px) {
+    div#old-posts {
+        display: none;
     }
 }

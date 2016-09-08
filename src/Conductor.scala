@@ -9,9 +9,10 @@ import org.http4s.server.{Server, ServerApp}
 import scalaz.concurrent.Task
 
 object Conductor extends ServerApp
+                    with SiteService
                     with GithubService
 {
-  val services = htmlService orElse githubApiService
+  val services = siteService orElse githubApiService
 
   override def server(args: List[String]): Task[Server] =
     BlazeBuilder

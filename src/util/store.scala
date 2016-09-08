@@ -167,9 +167,9 @@ object store {
           .mkString("\n"),
         post.name
       )
-
-      posts = CacheItem(newPosts.sortBy(_.date).reverse, 1.hour.fromNow)
-      newPosts
+      val sortedPosts = newPosts.sortBy(_.date).reverse
+      posts = CacheItem(sortedPosts, 1.hour.fromNow)
+      sortedPosts
     }
   }
 }
