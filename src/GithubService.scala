@@ -26,13 +26,13 @@ trait GithubService extends CirceCoder {
       .headers.get("X-Hub-Signature".ci)
       .map(_.value.split("=").last).getOrElse("")
 
-    request.body.runLast.flatMap {
-      case None => throw new InvalidBodyException("Couldn't parse body bytes")
-      case Some(bodyBytes) =>
-        val digest = Algo.hmac(Config.secret).sha1(bodyBytes.toArray)
+    val bodyTask = request.body.runLog.map(_.reduce(_ ++ _).toArray)
 
-        if (digest hash= signature) onValid(push)
-        else throw new IllegalArgumentException("Incorrect signature for push request")
+    bodyTask.flatMap { bodyBytes =>
+      val digest = Algo.hmac(Config.secret).sha1(bodyBytes)
+
+      if (digest hash= signature) onValid(push)
+      else throw new IllegalArgumentException("Incorrect signature for push request")
     }
   }
 
