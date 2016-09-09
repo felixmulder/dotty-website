@@ -151,7 +151,7 @@ object store {
         post <- mdposts.toList
         if post.name.endsWith(".md")
         date = post.name.substring(0, 10)
-        text = post.lines.mkString("\n")
+        text = post.contentAsString(scala.io.Codec.UTF8)
         postInfo = parseYaml(text)
       } yield BlogPost(
         postInfo("title"),
