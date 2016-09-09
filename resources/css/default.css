@@ -91,12 +91,9 @@ div.page.blue > div.questions > div.contributors+div {
 }
 
 div.page.blue > div.questions > div.contributors > div.contributors-cell {
-    float: left;
-    display: inline;
-}
-
-div.page.blue > div.questions > div.contributors > div.contributors-cell+div.contributors-cell {
-    margin-left: 24px;
+    margin: 0 auto 1em;
+    width: 348px;
+    overflow: hidden;
 }
 
 div.page.blue > div.questions > div.contributors > div.contributors-cell > div.contributor {
@@ -500,17 +497,12 @@ and (-webkit-device-pixel-ratio: 2)
     }
 
     div.page.blue > div.questions > div.contributors > div.contributors-cell {
-        float: none;
-        display: block;
         width: 194px;
         margin: 0 auto;
     }
 
     div.page.blue > div.questions > div.contributors > div.contributors-cell+div.contributors-cell {
-        float: none;
-        display: block;
-        width: 122px;
-        margin: 0 auto;
+        margin: 2em auto 0;
     }
 
     div.page.blue > div.questions > div.contributors > div.contributors-cell > div.contributor {
