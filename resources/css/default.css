@@ -2,7 +2,7 @@
 @import url(https://fonts.googleapis.com/css?family=Lobster);
 @import url(https://fonts.googleapis.com/css?family=Raleway:700);
 @import url(https://fonts.googleapis.com/css?family=Lato:700);
-@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,900);
+@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900);
 
 html, body {
     box-sizing: border-box;
@@ -30,12 +30,17 @@ div#header {
     overflow: hidden;
 }
 
+div#mobile-header {
+    display: none;
+}
+
 div.page {
     min-height: 100vh;
     width: 100%;
     padding: 15px 10px;
     min-width: 700px;
     position: relative;
+    font-weight: 300;
 }
 
 div.page.exactly-one-page {
@@ -124,19 +129,19 @@ div.page > div.centered > h2 {
     margin: 32px 0;
 }
 
-nav.nav {
+div#header nav.nav {
     float: right;
     line-height: 43px;
     font-family: 'Source Sans Pro', sans-serif;
 }
 
-nav img#github-logo {
+div#header nav img#github-logo {
     margin-right: 10px;
     width: 40px;
     height: auto;
 }
 
-li.nav-item > a.nav-link {
+div#header li.nav-item > a.nav-link {
     color: #fff;
 }
 
@@ -312,7 +317,7 @@ div#build-status button.console-output-button:visited {
     right: 1px;
 }
 
-a#home-button {
+div#home-button-container {
     position: fixed;
     top: 2em;
     left: 2em;
@@ -320,6 +325,10 @@ a#home-button {
     text-align: center;
     color: #fff;
     width: 41px;
+}
+
+a#home-button {
+    color: #fff;
 }
 
 a#home-button > img {
@@ -353,6 +362,7 @@ div.author-container {
     margin: 1em 0;
     width: 100%;
     overflow: hidden;
+    font-weight: 400;
 }
 
 div.author-container > img {
@@ -407,6 +417,32 @@ only screen /* iPhone 6 */
 and (max-device-width: 667px)
 and (-webkit-device-pixel-ratio: 2)
 {
+    div#header {
+        display: none;
+    }
+
+    div#mobile-header {
+        display: block;
+    }
+
+    div#mobile-header > nav {
+        z-index: 2;
+    }
+
+    div#mobile-header > nav #collapsed-header > div > ul {
+        list-style-type: none;
+        padding-left: 0;
+        font-size: 2em;
+    }
+
+    #collapsed-header > div > ul > li > a {
+        color: #fff;
+    }
+
+    div#mobile-header nav #github-logo {
+        width: 41px;
+    }
+
     div.page {
         min-width: 0;
     }
@@ -474,5 +510,38 @@ and (-webkit-device-pixel-ratio: 2)
 @media screen and (max-width: 1194px) {
     div#old-posts {
         display: none;
+    }
+}
+
+@media screen and (max-width: 899px) {
+    div.blog-post > div.centered > h1 {
+        text-align: center;
+    }
+    div.blog-post > div.centered > div.author-container {
+        width: 140px;
+        text-align: center;
+        margin: 1em auto;
+    }
+    div.blog-post > div.centered > div.author-container > img {
+        width: 140px;
+    }
+    div.author-container > div.float-container {
+        float: none;
+        margin-top: 0;
+    }
+    div#home-button-container {
+        position: relative;
+        top: auto;
+        left: auto;
+        width: 100%;
+        padding: 15px 10px;
+        min-width: 700px;
+    }
+    div#home-button-container > a#home-button > span {
+        display: none;
+    }
+    div#home-button-container > a#home-button > img {
+        width: 55px;
+        height: auto;
     }
 }

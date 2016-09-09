@@ -1,11 +1,13 @@
 @(post: dotty.website.util.store.BlogPost)
 
-<a id="home-button" href="/">
-    <img src="/static/images/scala-logo.svg">
-    Home
-</a>
-
 <div class="page teal blog-post">
+    <div id="home-button-container">
+        <a id="home-button" href="/">
+            <img src="/static/images/scala-logo.svg">
+            <span>Home</span>
+        </a>
+    </div>
+
     <div class="centered">
         <h1 class"blog-title">@post.title</h1>
         @if(post.subTitle.isDefined) {
