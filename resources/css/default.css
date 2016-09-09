@@ -402,6 +402,46 @@ div#old-posts a:visited {
 
 /** End Blog */
 
+/** Media queries for smaller devices */
+@media screen and (max-width: 1194px) {
+    div#old-posts {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 899px) {
+    div.blog-post > div.centered > h1 {
+        text-align: center;
+    }
+    div.blog-post > div.centered > div.author-container {
+        width: 140px;
+        text-align: center;
+        margin: 1em auto;
+    }
+    div.blog-post > div.centered > div.author-container > img {
+        width: 140px;
+    }
+    div.author-container > div.float-container {
+        float: none;
+        margin-top: 0;
+    }
+    div#home-button-container {
+        position: relative;
+        top: auto;
+        left: auto;
+        width: 100%;
+        padding: 15px 10px;
+        min-width: 700px;
+    }
+    div#home-button-container > a#home-button > span {
+        display: none;
+    }
+    div#home-button-container > a#home-button > img {
+        width: 55px;
+        height: auto;
+    }
+}
+
 /* Media query rules specifically for mobile devices */
 @media
 screen /* HiDPI device like Nexus 5 */
@@ -449,6 +489,10 @@ and (-webkit-device-pixel-ratio: 2)
 
     div.page > div.centered.questions > h1 {
         font-size: 2.2em;
+    }
+
+    div#home-button-container {
+        min-width: 0;
     }
 
     div.page.blue > div.questions > div.contributors {
@@ -504,44 +548,5 @@ and (-webkit-device-pixel-ratio: 2)
 
     div#header > nav.nav.nav-pills .nav-item+.nav-item {
         margin-left: 0;
-    }
-}
-
-@media screen and (max-width: 1194px) {
-    div#old-posts {
-        display: none;
-    }
-}
-
-@media screen and (max-width: 899px) {
-    div.blog-post > div.centered > h1 {
-        text-align: center;
-    }
-    div.blog-post > div.centered > div.author-container {
-        width: 140px;
-        text-align: center;
-        margin: 1em auto;
-    }
-    div.blog-post > div.centered > div.author-container > img {
-        width: 140px;
-    }
-    div.author-container > div.float-container {
-        float: none;
-        margin-top: 0;
-    }
-    div#home-button-container {
-        position: relative;
-        top: auto;
-        left: auto;
-        width: 100%;
-        padding: 15px 10px;
-        min-width: 700px;
-    }
-    div#home-button-container > a#home-button > span {
-        display: none;
-    }
-    div#home-button-container > a#home-button > img {
-        width: 55px;
-        height: auto;
     }
 }
