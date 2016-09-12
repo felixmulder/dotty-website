@@ -17,7 +17,7 @@ object store {
   sealed trait Cached[+I] { self =>
     def getOrElse[R >: I](default: => Task[R]): Task[R] = self match {
       case CacheItem(i, deadline) if deadline.hasTimeLeft => Task.now(i)
-      case EmptyCache => default
+      case _ => default
     }
   }
   case object EmptyCache extends Cached[Nothing]
