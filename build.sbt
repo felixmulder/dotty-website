@@ -63,8 +63,10 @@ lazy val `dotty-website` = project.in(file("."))
 
       val javaDeps = Seq(
         "com.github.rjeschke" % "txtmark"          % "0.13",
+        // Not sure if _both_ sl4j and logback are needed
+        "org.slf4j"           % "slf4j-api"        % "1.7.21",
+        "ch.qos.logback"      % "logback-classic"  % "1.1.7",
         "org.eclipse.jgit"    % "org.eclipse.jgit" % "4.4.1.201607150455-r",
-        "org.slf4j"           % "slf4j-nop"        % "1.6.4",
         "org.yaml"            % "snakeyaml"        % "1.17"
       )
 
