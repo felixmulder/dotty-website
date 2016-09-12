@@ -111,65 +111,54 @@ object store {
   private[this] val client = PooledHttp1Client()
   private[this] var thisMonthInDottyHtml: Cached[String] = EmptyCache
 
-  def GetThisMonthInDotty(): Task[String] = store.synchronized {
-    thisMonthInDottyHtml.getOrElse {
-      val endpoint =
-        "https://raw.githubusercontent.com/wiki/lampepfl/dotty/This-Month-in-Dotty.md"
+  def GetThisMonthInDotty(): Task[String] = thisMonthInDottyHtml getOrElse {
+    val endpoint =
+      "https://raw.githubusercontent.com/wiki/lampepfl/dotty/This-Month-in-Dotty.md"
 
-      client.expect[String](endpoint).map { content =>
-        val html = parseMarkdown(content)
-        thisMonthInDottyHtml = CacheItem(html, 1.hour.fromNow)
-        html
-      }
+    client.expect[String](endpoint).map { content =>
+      val html = parseMarkdown(content)
+      store.synchronized { thisMonthInDottyHtml = CacheItem(html, 1.hour.fromNow) }
+      html
     }
   }
 
   var posts: Cached[List[BlogPost]] = EmptyCache
-  def GetPosts(): Task[List[BlogPost]] = store.synchronized {
-    posts getOrElse Task.delay {
-      import better.files._
-      import org.yaml.snakeyaml.Yaml
+  def GetPosts(): Task[List[BlogPost]] = posts getOrElse Task.delay {
+    import better.files._
+    import org.yaml.snakeyaml.Yaml
+    import scala.collection.JavaConverters._
 
-      val File.Type.Directory(mdposts) = file"blog/"
+    val File.Type.Directory(mdposts) = file"blog/"
 
-      def parseYaml(str: String): Map[String, String] = try {
-        import scala.collection.JavaConverters._
-        new Yaml()
-          .loadAll(str)
-          .iterator.next
-          .asInstanceOf[java.util.Map[String,String]].asScala
-          .toMap
-      } catch {
-        case ex: Throwable =>
-          System.err.println(ex)
-          System.err.println(ex.getMessage)
-          ex.printStackTrace()
-          Map.empty
-      }
+    def parseYaml(str: String): Map[String, String] =
+      new Yaml()
+        .loadAll(str)
+        .iterator.next
+        .asInstanceOf[java.util.Map[String,String]].asScala
+        .toMap
 
-      val newPosts = for {
-        post <- mdposts.toList
-        if post.name.endsWith(".md")
-        date = post.name.substring(0, 10)
-        text = post.contentAsString(scala.io.Codec.UTF8)
-        postInfo = parseYaml(text)
-      } yield BlogPost(
-        postInfo("title"),
-        postInfo.get("subTitle"),
-        postInfo("author"),
-        postInfo.get("authorImg").map("/static" + _),
-        date,
-        text.lines
-          .dropWhile(_.trim != "---")
-          .drop(1)
-          .dropWhile(_.trim != "---")
-          .drop(1)
-          .mkString("\n"),
-        post.name
-      )
-      val sortedPosts = newPosts.sortBy(_.date).reverse
-      posts = CacheItem(sortedPosts, 1.hour.fromNow)
-      sortedPosts
-    }
+    val newPosts = for {
+      post <- mdposts.toList
+      if post.name.endsWith(".md")
+      date = post.name.substring(0, 10)
+      text = post.contentAsString(scala.io.Codec.UTF8)
+      postInfo = parseYaml(text)
+    } yield BlogPost(
+      postInfo("title"),
+      postInfo.get("subTitle"),
+      postInfo("author"),
+      postInfo.get("authorImg").map("/static" + _),
+      date,
+      text.lines
+        .dropWhile(_.trim != "---")
+        .drop(1)
+        .dropWhile(_.trim != "---")
+        .drop(1)
+        .mkString("\n"),
+      post.name
+    )
+    val sortedPosts = newPosts.sortBy(_.date).reverse
+    store.synchronized { posts = CacheItem(sortedPosts, 1.hour.fromNow) }
+    sortedPosts
   }
 }
