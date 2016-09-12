@@ -28,7 +28,7 @@ trait SiteService {
       for {
         posts <- GetPosts()
         Some(post) = posts.find(_.fileName == s"$year-$month-$day-$title.md")
-        html  <- RenderBlogPost(post)
+        html  <- RenderBlogPost(post, posts)
         res   <- Ok(html).withContentType(Some(`Content-Type`(`text/html`)))
       } yield res
 

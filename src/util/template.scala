@@ -18,9 +18,9 @@ object template {
   def RenderThisMonthInDotty(text: String): Task[String] =
     RenderHTML(ThisMonthInDotty(text).toString :: Nil)
 
-  def RenderBlog(posts: List[BlogPost]): Task[String] =
-    RenderHTML(BlogIndex(posts).toString :: Nil)
+  def RenderBlogPost(focused: BlogPost, archive: List[BlogPost]): Task[String] =
+    RenderHTML(BlogIndex(focused, archive).toString :: Nil)
 
-  def RenderBlogPost(post: BlogPost): Task[String] =
-    RenderHTML(twirl.html.BlogPost(post).toString :: Nil)
+  def RenderBlog(posts: List[BlogPost]): Task[String] =
+    RenderBlogPost(posts.head, posts)
 }

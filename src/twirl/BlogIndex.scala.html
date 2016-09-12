@@ -1,22 +1,18 @@
 @import dotty.website.util.store.BlogPost
-@(posts: List[BlogPost])
+@(focused: BlogPost, archive: List[BlogPost])
 
-@if(posts.nonEmpty) {
-    @twirl.html.BlogPost(posts.head)
-}
+@twirl.html.BlogPost(focused)
 
-@if(posts.length > 1) {
-    <div id="old-posts">
-        <h1>Archive</h1>
-        <ul>
-            @for(post <- posts) {
-            <li>
-                @defining(post.fileName.replaceFirst("-", "/").replaceFirst("-", "/").replaceFirst("-", "/").dropRight(3)) { postPath =>
-                <a href="/blog/@postPath">@post.title</a>
-                <div class="subsection">@post.date @post.author</div>
-                }
-            </li>
+<div id="old-posts">
+    <h1>Archive</h1>
+    <ul>
+        @for(post <- archive) {
+        <li>
+            @defining(post.fileName.replaceFirst("-", "/").replaceFirst("-", "/").replaceFirst("-", "/").dropRight(3)) { postPath =>
+            <a href="/blog/@postPath">@post.title</a>
+            <div class="subsection">@post.date @post.author</div>
             }
-        </ul>
-    </div>
-}
+        </li>
+        }
+    </ul>
+</div>
