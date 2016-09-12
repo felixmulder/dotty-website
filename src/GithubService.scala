@@ -36,7 +36,7 @@ trait GithubService extends CirceCoder {
     }
   }
 
-  val githubApiService = Logging log HttpService {
+  val githubApiService = HttpService {
     case req @ POST -> Root / "github" =>
       req.decode[GithubEvent] {
         case p: Push =>
